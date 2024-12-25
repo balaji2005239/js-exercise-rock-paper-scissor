@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROCK PAPER SCISSORS</title>
+</head>
+<body>
+    <script>
+        function gethumanchoice() {
+            let n = parseInt(prompt("Please enter the number you would like to use (0: rock, 1: paper, 2: scissor): "));
+            while (n < 0 || n > 2 || isNaN(n)) {
+                n = parseInt(prompt("Invalid choice. Enter 0 for rock, 1 for paper, or 2 for scissors: "));
+            }
+            return n;
+        }
+
+        function getcomputerchoice() {
+            return Math.floor(Math.random() * 3);
+        }
+
+        function playround(hc, cc, hs, cs, round) {
+            if (hc === cc) {
+                console.log(`Round ${round}: DRAW`);
+            } else if (
+                (hc === 0 && cc === 2) || 
+                (hc === 1 && cc === 0) || 
+                (hc === 2 && cc === 1)
+            ) {
+                hs++;
+                console.log(`Round ${round}: HUMAN WIN`);
+            } else {
+                cs++;
+                console.log(`Round ${round}: COMPUTER WIN`);
+            }
+            console.log(`Human: ${hs} Computer: ${cs}`);
+            return [hs, cs];
+        }
+
+        function game(rounds) {
+            let hs = 0, cs = 0;
+            for (let i = 1; i <= rounds; i++) {
+                const humanchoice = gethumanchoice();
+                const computerchoice = getcomputerchoice();
+                [hs, cs] = playround(humanchoice, computerchoice, hs, cs, i);
+            }
+
+            console.log("MATCH OVER");
+            console.log(`Final Score - Human: ${hs}, Computer: ${cs}`);
+            if (hs > cs) {
+                console.log("HUMAN WINS THE MATCH!");
+            } else if (hs < cs) {
+                console.log("COMPUTER WINS THE MATCH!");
+            } else {
+                console.log("MATCH ENDS IN A DRAW!");
+            }
+        }
+
+        const rounds = parseInt(prompt("Enter the number of rounds to play: "));
+        if (!isNaN(rounds) && rounds > 0) {
+            game(rounds);
+        } else {
+            console.log("Invalid number of rounds. Please refresh and try again.");
+        }
+    </script>
+</body>
+</html>
