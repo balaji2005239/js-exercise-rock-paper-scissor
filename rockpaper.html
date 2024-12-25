@@ -4,63 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ROCK PAPER SCISSORS</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+        }
+        .scoreboard {
+            margin-top: 20px;
+            border: 3px solid black;
+        }
+    </style>
 </head>
 <body>
+    <h1>ROCK PAPER SCISSORS</h1>
+    <div>
+        <button onclick="playRound(0)">ROCK</button>
+        <button onclick="playRound(1)">PAPER</button>
+        <button onclick="playRound(2)">SCISSORS</button>
+    </div>
+    <div class="scoreboard">
+        <p id="result">Make your choice to start the game!</p>
+        <p>Human: <span id="humanScore">0</span> | Computer: <span id="computerScore">0</span></p>
+    </div>
     <script>
-        function gethumanchoice() {
-            let n = parseInt(prompt("Please enter the number you would like to use (0: rock, 1: paper, 2: scissor): "));
-            while (n < 0 || n > 2 || isNaN(n)) {
-                n = parseInt(prompt("Invalid choice. Enter 0 for rock, 1 for paper, or 2 for scissors: "));
-            }
-            return n;
-        }
+        let humanScore = 0, computerScore = 0;
+        const maxScore = 5;
 
-        function getcomputerchoice() {
+        function getComputerChoice() {
             return Math.floor(Math.random() * 3);
         }
 
-        function playround(hc, cc, hs, cs, round) {
-            if (hc === cc) {
-                console.log(`Round ${round}: DRAW`);
+        function playRound(humanChoice) {
+            const computerChoice = getComputerChoice();
+            const choices = ["ROCK", "PAPER", "SCISSORS"];
+
+            let resultMessage = `You chose ${choices[humanChoice]}, Computer chose ${choices[computerChoice]}. `;
+            if (humanChoice === computerChoice) {
+                resultMessage += "It's a DRAW!";
             } else if (
-                (hc === 0 && cc === 2) || 
-                (hc === 1 && cc === 0) || 
-                (hc === 2 && cc === 1)
+                (humanChoice === 0 && computerChoice === 2) || 
+                (humanChoice === 1 && computerChoice === 0) || 
+                (humanChoice === 2 && computerChoice === 1)
             ) {
-                hs++;
-                console.log(`Round ${round}: HUMAN WIN`);
+                humanScore++;
+                resultMessage += "You WIN this round!";
             } else {
-                cs++;
-                console.log(`Round ${round}: COMPUTER WIN`);
-            }
-            console.log(`Human: ${hs} Computer: ${cs}`);
-            return [hs, cs];
-        }
-
-        function game(rounds) {
-            let hs = 0, cs = 0;
-            for (let i = 1; i <= rounds; i++) {
-                const humanchoice = gethumanchoice();
-                const computerchoice = getcomputerchoice();
-                [hs, cs] = playround(humanchoice, computerchoice, hs, cs, i);
+                computerScore++;
+                resultMessage += "Computer WINS this round!";
             }
 
-            console.log("MATCH OVER");
-            console.log(`Final Score - Human: ${hs}, Computer: ${cs}`);
-            if (hs > cs) {
-                console.log("HUMAN WINS THE MATCH!");
-            } else if (hs < cs) {
-                console.log("COMPUTER WINS THE MATCH!");
-            } else {
-                console.log("MATCH ENDS IN A DRAW!");
+            document.getElementById("result").innerText = resultMessage;
+            document.getElementById("humanScore").innerText = humanScore;
+            document.getElementById("computerScore").innerText = computerScore;
+
+            if (humanScore === maxScore || computerScore === maxScore) {
+                endGame();
             }
         }
 
-        const rounds = parseInt(prompt("Enter the number of rounds to play: "));
-        if (!isNaN(rounds) && rounds > 0) {
-            game(rounds);
-        } else {
-            console.log("Invalid number of rounds. Please refresh and try again.");
+        function endGame() {
+            let finalMessage = humanScore > computerScore 
+                ? "CONGRATULATIONS! You won the match!" 
+                : "Computer wins the match. Better luck next time!";
+            finalMessage += " Refresh the page to play again.";
+            document.getElementById("result").innerText = finalMessage;
+
+            document.querySelectorAll("button").forEach(button => button.disabled = true);
         }
     </script>
 </body>
